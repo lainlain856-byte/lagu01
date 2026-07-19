@@ -290,26 +290,51 @@
   const iconPause = document.getElementById('iconPause');
   const trackState = document.getElementById('trackState');
 
-  playBtn.addEventListener('click', async () => {
-    if(!ctx){ buildAudioGraph(); }
-    if(ctx.state === 'suspended'){ await ctx.resume(); }
-
-    playing = !playing;
-
-    if(playing){
-      try{
-        await audioEl.play();
-      }catch(err){
-        trackState.textContent = 'Gagal memutar audio';
-        playing = false;
-      }
-    } else {
-      audioEl.pause();
-    }
-
+  function setPlayingUI(isPlaying){
+    playing = isPlaying;
     iconPlay.style.display = playing ? 'none' : 'block';
     iconPause.style.display = playing ? 'block' : 'none';
     trackState.textContent = playing ? 'Sedang diputar — Musik Latar' : 'Dijeda';
+  }
+
+  async function startPlayback(){
+    if(!ctx){ buildAudioGraph(); }
+    if(ctx.state === 'suspended'){ await ctx.resume(); }
+    await audioEl.play();
+    setPlayingUI(true);
+  }
+
+  async function stopPlayback(){
+    audioEl.pause();
+    setPlayingUI(false);
+  }
+
+  // Coba autoplay begitu halaman dimuat
+  window.addEventListener('DOMContentLoaded', async () => {
+    try{
+      await startPlayback();
+    }catch(err){
+      // Browser memblokir autoplay bersuara tanpa interaksi —
+      // musik akan mulai otomatis pada klik/sentuhan pertama di halaman.
+      trackState.textContent = 'Klik di mana saja untuk memulai';
+      const resumeOnFirstInteraction = async () => {
+        try{ await startPlayback(); }catch(e){ /* abaikan */ }
+        document.removeEventListener('click', resumeOnFirstInteraction);
+        document.removeEventListener('touchstart', resumeOnFirstInteraction);
+      };
+      document.addEventListener('click', resumeOnFirstInteraction);
+      document.addEventListener('touchstart', resumeOnFirstInteraction);
+    }
+  });
+
+  // Tombol play tetap berfungsi untuk jeda / lanjut secara manual
+  playBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    if(playing){
+      await stopPlayback();
+    } else {
+      try{ await startPlayback(); }catch(err){ trackState.textContent = 'Gagal memutar audio'; }
+    }
   });
 </script>
 

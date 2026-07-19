@@ -2,22 +2,17 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>PELAUT MALAM — Header</title>
+<title>Header</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,400&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
-
   :root{
     --bg: #0B0E1A;
-    --bg-2: #10152A;
     --ink: #EDEAE3;
-    --ink-dim: #9A98A8;
     --amber: #E8A33D;
     --violet: #6B5B95;
     --teal: #3F8C8C;
   }
 
   *{ margin:0; padding:0; box-sizing:border-box; }
-
   html,body{ height:100%; }
 
   body{
@@ -25,8 +20,6 @@
       radial-gradient(ellipse 120% 80% at 50% -10%, rgba(107,91,149,0.35), transparent 60%),
       radial-gradient(ellipse 80% 60% at 85% 110%, rgba(63,140,140,0.18), transparent 60%),
       var(--bg);
-    color: var(--ink);
-    font-family:'Inter', sans-serif;
     overflow:hidden;
   }
 
@@ -35,87 +28,37 @@
     width:100%;
     height:100vh;
     display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    padding: 5vw 6vw 4vw;
+    align-items:center;
+    justify-content:center;
   }
 
-  /* top bar */
-  .topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    font-family:'JetBrains Mono', monospace;
-    font-size:12px;
-    letter-spacing:0.08em;
-    color: var(--ink-dim);
-    text-transform:uppercase;
-    z-index:3;
+  .grain{
+    position:absolute; inset:0;
+    pointer-events:none;
+    opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index:1;
   }
-  .topbar .dot{
-    display:inline-block;
-    width:6px; height:6px;
+
+  .ring{
+    position:absolute;
+    width:120px; height:120px;
     border-radius:50%;
-    background: var(--teal);
-    margin-right:8px;
-    box-shadow: 0 0 8px var(--teal);
-    animation: pulse 2.4s ease-in-out infinite;
-  }
-  @keyframes pulse{ 0%,100%{opacity:.4} 50%{opacity:1} }
-
-  /* headline */
-  .headline-wrap{ z-index:3; }
-  .eyebrow{
-    font-family:'JetBrains Mono', monospace;
-    font-size:12px;
-    letter-spacing:0.2em;
-    color: var(--amber);
-    text-transform:uppercase;
-    margin-bottom:1.2rem;
+    border:1px solid rgba(232,163,61,0.25);
+    z-index:2;
+    animation: ringPulse 2.8s ease-out infinite;
     opacity:0;
-    animation: fadeUp .9s ease-out .2s forwards;
   }
-  h1{
-    font-family:'Fraunces', serif;
-    font-weight:300;
-    font-style:italic;
-    font-size: clamp(3.2rem, 10vw, 8.5rem);
-    line-height:0.95;
-    letter-spacing:-0.01em;
-    opacity:0;
-    animation: fadeUp 1s ease-out .35s forwards;
-  }
-  h1 b{ font-weight:600; font-style:normal; color:var(--ink); }
-  .sub{
-    max-width:36ch;
-    margin-top:1.4rem;
-    font-size:1rem;
-    color: var(--ink-dim);
-    line-height:1.6;
-    opacity:0;
-    animation: fadeUp 1s ease-out .55s forwards;
-  }
-  @keyframes fadeUp{
-    from{ opacity:0; transform:translateY(18px); }
-    to{ opacity:1; transform:translateY(0); }
+  .ring.delay{ animation-delay: 1.4s; }
+  @keyframes ringPulse{
+    0%{ transform:scale(1); opacity:0; }
+    15%{ opacity:0.6; }
+    100%{ transform:scale(1.9); opacity:0; }
   }
 
-  /* bottom row: player + waveform */
-  .bottom-row{
-    display:flex;
-    align-items:flex-end;
-    justify-content:space-between;
-    gap:2rem;
-    z-index:3;
-  }
-
-  .player{
-    display:flex;
-    align-items:center;
-    gap:14px;
-  }
   .play-btn{
-    width:56px; height:56px;
+    position:relative;
+    width:88px; height:88px;
     border-radius:50%;
     border:1px solid rgba(237,234,227,0.25);
     background: rgba(237,234,227,0.04);
@@ -125,70 +68,15 @@
     align-items:center;
     justify-content:center;
     transition: border-color .3s ease, background .3s ease, transform .2s ease;
-    flex-shrink:0;
+    z-index:3;
+    backdrop-filter: blur(2px);
   }
   .play-btn:hover{ border-color: var(--amber); background: rgba(232,163,61,0.08); }
   .play-btn:active{ transform: scale(0.94); }
-  .play-btn svg{ width:18px; height:18px; }
-
-  .player-label{
-    font-family:'JetBrains Mono', monospace;
-    font-size:11px;
-    letter-spacing:0.08em;
-    color: var(--ink-dim);
-    text-transform:uppercase;
-  }
-  .player-label .track{
-    display:block;
-    font-family:'Inter', sans-serif;
-    font-size:14px;
-    color: var(--ink);
-    letter-spacing:0;
-    margin-top:2px;
-  }
-
-  .waveform{
-    display:flex;
-    align-items:flex-end;
-    gap:3px;
-    height:44px;
-    flex-shrink:0;
-  }
-  .waveform span{
-    display:block;
-    width:3px;
-    border-radius:2px;
-    background: linear-gradient(to top, var(--teal), var(--amber));
-    height:4px;
-    transition: height .08s ease;
-  }
-
-  .scroll-cue{
-    font-family:'JetBrains Mono', monospace;
-    font-size:11px;
-    color: var(--ink-dim);
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    writing-mode: vertical-rl;
-  }
-
-  /* ambient grain */
-  .grain{
-    position:absolute; inset:0;
-    pointer-events:none;
-    opacity:0.035;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    z-index:2;
-  }
-
-  @media (max-width: 640px){
-    .bottom-row{ flex-direction:column; align-items:flex-start; gap:1.5rem; }
-    .scroll-cue{ display:none; }
-  }
+  .play-btn svg{ width:26px; height:26px; }
 
   @media (prefers-reduced-motion: reduce){
-    .eyebrow, h1, .sub{ animation:none !important; opacity:1 !important; }
-    .topbar .dot{ animation:none; }
+    .ring{ animation:none; }
   }
 </style>
 </head>
@@ -196,105 +84,36 @@
 
 <div class="hero">
   <div class="grain"></div>
+  <div class="ring"></div>
+  <div class="ring delay"></div>
 
-  <div class="topbar">
-    <div><span class="dot"></span>Siaran Langsung — Studio Malam</div>
-    <div id="clock">00:00:00</div>
-  </div>
-
-  <div class="headline-wrap">
-    <div class="eyebrow">Album baru · Terbit tengah malam</div>
-    <h1>Pelaut<br><b>Malam</b></h1>
-    <p class="sub">Sembilan lagu yang direkam di antara jam dua dan jam empat pagi,
-      ketika kota diam dan yang tersisa hanya dengung lampu jalan.</p>
-  </div>
-
-  <div class="bottom-row">
-    <div class="player">
-      <button class="play-btn" id="playBtn" aria-label="Putar musik latar">
-        <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-        <svg id="iconPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
-      </button>
-      <div class="player-label">
-        Musik latar
-        <span class="track" id="trackState">Klik untuk memutar</span>
-      </div>
-    </div>
-
-    <div class="waveform" id="waveform"></div>
-
-    <div class="scroll-cue">Gulir ke bawah</div>
-  </div>
+  <button class="play-btn" id="playBtn" aria-label="Putar musik latar">
+    <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <svg id="iconPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+  </button>
 </div>
 
 <script>
-  // clock
-  const clockEl = document.getElementById('clock');
-  function tick(){
-    const d = new Date();
-    clockEl.textContent = d.toLocaleTimeString('id-ID', {hour12:false});
-  }
-  tick(); setInterval(tick, 1000);
-
-  // build waveform bars
-  const BAR_COUNT = 28;
-  const waveformEl = document.getElementById('waveform');
-  const bars = [];
-  for(let i=0;i<BAR_COUNT;i++){
-    const b = document.createElement('span');
-    waveformEl.appendChild(b);
-    bars.push(b);
-  }
-
-  // --- Audio: file yang diunggah pengguna, dianalisis lewat AnalyserNode ---
   const audioEl = new Audio('musik-latar.mp3');
   audioEl.loop = true;
   audioEl.crossOrigin = 'anonymous';
 
-  let ctx, analyser, dataArray, masterGain, playing = false, rafId, sourceNode;
+  let ctx, playing = false;
 
   function buildAudioGraph(){
     ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-    sourceNode = ctx.createMediaElementSource(audioEl);
-
-    masterGain = ctx.createGain();
-    masterGain.gain.value = 1;
-
-    analyser = ctx.createAnalyser();
-    analyser.fftSize = 64;
-    dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-    sourceNode.connect(masterGain);
-    masterGain.connect(analyser);
-    masterGain.connect(ctx.destination);
+    const sourceNode = ctx.createMediaElementSource(audioEl);
+    sourceNode.connect(ctx.destination);
   }
-
-  function drawWaveform(){
-    if(analyser){
-      analyser.getByteFrequencyData(dataArray);
-      bars.forEach((bar, i) => {
-        const v = dataArray[i % dataArray.length] || 0;
-        const h = 4 + (v / 255) * 40;
-        bar.style.height = h + 'px';
-      });
-    } else {
-      bars.forEach(bar => bar.style.height = '4px');
-    }
-    rafId = requestAnimationFrame(drawWaveform);
-  }
-  drawWaveform();
 
   const playBtn = document.getElementById('playBtn');
   const iconPlay = document.getElementById('iconPlay');
   const iconPause = document.getElementById('iconPause');
-  const trackState = document.getElementById('trackState');
 
   function setPlayingUI(isPlaying){
     playing = isPlaying;
     iconPlay.style.display = playing ? 'none' : 'block';
     iconPause.style.display = playing ? 'block' : 'none';
-    trackState.textContent = playing ? 'Sedang diputar — Musik Latar' : 'Dijeda';
   }
 
   async function startPlayback(){
@@ -314,9 +133,7 @@
     try{
       await startPlayback();
     }catch(err){
-      // Browser memblokir autoplay bersuara tanpa interaksi —
-      // musik akan mulai otomatis pada klik/sentuhan pertama di halaman.
-      trackState.textContent = 'Klik di mana saja untuk memulai';
+      // Diblokir browser — mulai otomatis pada interaksi pertama
       const resumeOnFirstInteraction = async () => {
         try{ await startPlayback(); }catch(e){ /* abaikan */ }
         document.removeEventListener('click', resumeOnFirstInteraction);
@@ -327,13 +144,12 @@
     }
   });
 
-  // Tombol play tetap berfungsi untuk jeda / lanjut secara manual
   playBtn.addEventListener('click', async (e) => {
     e.stopPropagation();
     if(playing){
       await stopPlayback();
     } else {
-      try{ await startPlayback(); }catch(err){ trackState.textContent = 'Gagal memutar audio'; }
+      try{ await startPlayback(); }catch(err){ /* abaikan */ }
     }
   });
 </script>
